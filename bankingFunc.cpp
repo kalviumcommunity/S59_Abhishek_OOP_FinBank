@@ -2,18 +2,21 @@
 #include <iostream>
 using namespace std;
 
-Account::Account(int accNum, double initialBalance) : accountNumber(accNum), balance(initialBalance) {}
+Account::Account(int accNum, double initialBalance) {
+    this->accountNumber = accNum;    
+    this->balance = initialBalance;        
+}
 
 double Account::getBalance() const {
-    return balance;
+    return this->balance;                  
 }
 
 void Account::setBalance(double newBalance) {
-    balance = newBalance;
+    this->balance = newBalance;            
 }
 
 int Account::getAccountNumber() const {
-    return accountNumber;
+    return this->accountNumber;            
 }
 
 void ATM::deposit(Account &account, double amount) {
@@ -32,7 +35,9 @@ void ATM::withdraw(Account &account, double amount) {
         cout << "Withdrawal successful. Remaining balance: " << newBalance << endl;
     }
 }
+
 void ATM::displayBalance(const Account &account) const {
     cout << "Account Number: " << account.getAccountNumber() << endl;
     cout << "Current Balance: " << account.getBalance() << endl;
+    cout << "Balance displayed using ATM." << endl;
 }
