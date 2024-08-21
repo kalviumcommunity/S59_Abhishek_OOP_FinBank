@@ -15,8 +15,8 @@ public:
 
 class ATM {
 public:
-    void deposit(Account &account, double amount);
-    void withdraw(Account &account, double amount);
-    void displayBalance(const Account &account) const;
+    void deposit(Account* account, double amount);
+    void withdraw(Account* account, double amount);
+    void displayBalance(const Account* account) const;
 };
 #endif
