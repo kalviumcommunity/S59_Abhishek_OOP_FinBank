@@ -45,7 +45,12 @@ void ATM::displayBalance(const Account *account) const {
     cout << "Account Number: " << account->getAccountNumber() << endl;
     cout << "Current Balance: " << account->getBalance() << endl;
 }
-void ATM::displayStatistics() {
-    cout << "Total Deposits: " << totalDeposits << endl;
-    cout << "Total Withdrawals: " << totalWithdrawals << endl;
+void ATM::displayStats(int option) {
+    cout<<"Press '1' for checking Total Deposits and '2' for Total Withdrawals: "<<endl;
+    cin>>option;
+    if (option == 1) {
+        cout << "Total Deposits: " << totalDeposits << endl;
+    } else if (option == 2) {
+        cout << "Total Withdrawals: " << totalWithdrawals << endl;
+    }
 }
