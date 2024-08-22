@@ -17,7 +17,8 @@ int main()
 
     atm.displayBalance(account);
 
-    atm.displayStatistics();
+    int option;
+    atm.displayStats(option);
     delete account;
     
     return 0;
