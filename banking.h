@@ -15,8 +15,11 @@ public:
 
 class ATM {
 public:
+    static int totalDeposits;  
+    static int totalWithdrawals;  
     void deposit(Account* account, double amount);
     void withdraw(Account* account, double amount);
     void displayBalance(const Account* account) const;
+    static void displayStatistics(); 
 };
 #endif

@@ -4,7 +4,7 @@
 int main()
 {
 
-    Account *account = new Account(1001, 500.0);
+    Account *account = new Account(1001, 5000.0);
     ATM atm;
 
     atm.displayBalance(account);
@@ -13,7 +13,11 @@ int main()
 
     atm.withdraw(account, 50.0);
 
+    atm.withdraw(account, 500.0);
+
     atm.displayBalance(account);
+
+    atm.displayStatistics();
     delete account;
     
     return 0;
