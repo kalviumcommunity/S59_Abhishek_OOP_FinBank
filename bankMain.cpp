@@ -3,7 +3,6 @@
 
 int main()
 {
-
     Account *account = new Account(1001, 5000.0);
     ATM atm;
 
