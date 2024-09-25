@@ -3,56 +3,64 @@
 using namespace std;
 
 Account::Account(int accNum, double initialBalance) {
-    this->accountNumber = accNum;
-    this->balance = initialBalance;
+    this->accountNumber = accNum;    
+    this->balance = initialBalance;        
 }
 
 double Account::getBalance() const {
-    return this->balance;
+    return this->balance;                  
 }
 
 void Account::setBalance(double newBalance) {
-    this->balance = newBalance;
+    this->balance = newBalance;            
 }
 
 int Account::getAccountNumber() const {
-    return this->accountNumber;
+    return this->accountNumber;            
 }
 
 int ATM::totalDeposits = 0;
 int ATM::totalWithdrawals = 0;
 
-int ATM::getTotalDeposits() {
-    return totalDeposits;
+ATM::ATM() {
+    transactionLimit = 2000.0;  
 }
 
-void ATM::setTotalDeposits(int deposits) {
-    totalDeposits = deposits;
+double ATM::getTransactionLimit() const {
+    return transactionLimit;
 }
 
-int ATM::getTotalWithdrawals() {
-    return totalWithdrawals;
+void ATM::setTransactionLimit(double newLimit) {
+    transactionLimit = newLimit;
 }
 
-void ATM::setTotalWithdrawals(int withdrawals) {
-    totalWithdrawals = withdrawals;
+bool ATM::isAmountValid(double amount) const {
+    return amount <= transactionLimit;
 }
 
 void ATM::deposit(Account *account, double amount) {
+    if (!isAmountValid(amount)) {
+        cout << "Transaction exceeds the limit of " << transactionLimit << endl;
+        return;
+    }
     double newBalance = account->getBalance() + amount;
     account->setBalance(newBalance);
-    setTotalDeposits(getTotalDeposits()+1);
+    totalDeposits++;
     cout << "Deposit successful. New balance: " << newBalance << endl;
 }
 
 void ATM::withdraw(Account *account, double amount) {
     double currentBalance = account->getBalance();
+    if (!isAmountValid(amount)) {
+        cout << "Transaction exceeds the limit of " << transactionLimit << endl;
+        return;
+    }
     if (amount > currentBalance) {
         cout << "Insufficient funds." << endl;
     } else {
         double newBalance = currentBalance - amount;
         account->setBalance(newBalance);
-        setTotalWithdrawals(getTotalWithdrawals() + 1);
+        totalWithdrawals++;
         cout << "Withdrawal successful. Remaining balance: " << newBalance << endl;
     }
 }
@@ -63,11 +71,11 @@ void ATM::displayBalance(const Account *account) const {
 }
 
 void ATM::displayStats(int option) {
-    cout << "Press '1' for checking Total Deposits and '2' for Total Withdrawals: ";
-    cin >> option;
+    cout<<"Press '1' for checking Total Deposits and '2' for Total Withdrawals: "<<endl;
+    cin>>option;
     if (option == 1) {
-        cout << "Total Deposits: " << getTotalDeposits() << endl;
+        cout << "Total Deposits: " << totalDeposits << endl;
     } else if (option == 2) {
-        cout << "Total Withdrawals: " << getTotalWithdrawals() << endl;
+        cout << "Total Withdrawals: " << totalWithdrawals << endl;
     }
 }
