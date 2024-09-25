@@ -14,10 +14,17 @@ public:
 };
 
 class ATM {
-public:
+private:
     static int totalDeposits;  
-    static int totalWithdrawals;  
-    
+    static int totalWithdrawals;
+
+public:
+    static int getTotalDeposits();
+    static void setTotalDeposits(int deposits);
+
+    static int getTotalWithdrawals();
+    static void setTotalWithdrawals(int withdrawals);
+
     void deposit(Account* account, double amount);
     void withdraw(Account* account, double amount);
     void displayBalance(const Account* account) const;
