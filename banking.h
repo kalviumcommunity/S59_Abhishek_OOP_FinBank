@@ -3,31 +3,32 @@
 
 class Account {
 private:
-    int accountNumber;
-    double balance;
+    int accountNumber;  
+    double balance;   
 
 public:
-    Account(int accNum, double initialBalance);
-    double getBalance() const;
-    void setBalance(double newBalance);
-    int getAccountNumber() const;
+    Account(int accNum, double initialBalance); 
+    double getBalance() const;                 
+    void setBalance(double newBalance);         
+    int getAccountNumber() const;                
 };
 
 class ATM {
 private:
+    double transactionLimit;  
+    bool isAmountValid(double amount) const; 
     static int totalDeposits;  
-    static int totalWithdrawals;
+    static int totalWithdrawals; 
 
-public:
-    static int getTotalDeposits();
-    static void setTotalDeposits(int deposits);
+public: 
+    ATM();  
+    double getTransactionLimit() const;
+    void setTransactionLimit(double newLimit);
+    
+    void deposit(Account* account, double amount);     
+    void withdraw(Account* account, double amount);    
+    void displayBalance(const Account* account) const; 
 
-    static int getTotalWithdrawals();
-    static void setTotalWithdrawals(int withdrawals);
-
-    void deposit(Account* account, double amount);
-    void withdraw(Account* account, double amount);
-    void displayBalance(const Account* account) const;
-    static void displayStats(int option); 
+    static void displayStats(int option);  
 };
 #endif
