@@ -1,5 +1,7 @@
 #ifndef BANKING_H
 #define BANKING_H
+#include <string>
+using namespace std;
 
 class Account {
 private:
@@ -13,9 +15,18 @@ public:
     int getAccountNumber() const;
 };
 
+class SavingsAccount : public Account {
+private:
+    double interestRate;
+
+public:
+    SavingsAccount(int accNum, double initialBalance, double rate);
+    double calculateInterest() const;
+};
+
 class ATM {
 private:
-    static int totalDeposits;  
+    static int totalDeposits;
     static int totalWithdrawals;
 
 public:
@@ -28,6 +39,17 @@ public:
     void deposit(Account* account, double amount);
     void withdraw(Account* account, double amount);
     void displayBalance(const Account* account) const;
-    static void displayStats(int option); 
+    static void displayStats(int option);
 };
+
+class BankBranch : public Account, public ATM {
+private:
+    string branchName;
+
+public:
+    BankBranch(int accNum, double initialBalance, const string& name);
+
+    void displayBranchDetails() const;
+};
+
 #endif

@@ -41,7 +41,7 @@ void ATM::setTotalWithdrawals(int withdrawals) {
 void ATM::deposit(Account *account, double amount) {
     double newBalance = account->getBalance() + amount;
     account->setBalance(newBalance);
-    setTotalDeposits(getTotalDeposits()+1);
+    setTotalDeposits(getTotalDeposits() + 1);
     cout << "Deposit successful. New balance: " << newBalance << endl;
 }
 
@@ -63,11 +63,27 @@ void ATM::displayBalance(const Account *account) const {
 }
 
 void ATM::displayStats(int option) {
-    cout << "Press '1' for checking Total Deposits and '2' for Total Withdrawals: ";
-    cin >> option;
     if (option == 1) {
         cout << "Total Deposits: " << getTotalDeposits() << endl;
     } else if (option == 2) {
         cout << "Total Withdrawals: " << getTotalWithdrawals() << endl;
     }
+}
+
+SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
+    : Account(accNum, initialBalance), interestRate(rate) {}
+
+double SavingsAccount::calculateInterest() const {
+    return getBalance() * interestRate;
+}
+
+BankBranch::BankBranch(int accNum, double initialBalance, const std::string &name)
+    : Account(accNum, initialBalance), branchName(name) {}
+
+void BankBranch::displayBranchDetails() const {
+    cout << "Branch: " << branchName << endl;
+    cout << "Account Number: " << getAccountNumber() << endl;
+    cout << "Current Balance: " << getBalance() << endl;
+    cout << "Total Deposits: " << ATM::getTotalDeposits() << endl;
+    cout << "Total Withdrawals: " << ATM::getTotalWithdrawals() << endl;
 }
