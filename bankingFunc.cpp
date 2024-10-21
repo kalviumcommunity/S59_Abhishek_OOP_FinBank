@@ -2,19 +2,9 @@
 #include <iostream>
 using namespace std;
 
-int ATM::totalDeposits = 0;
-int ATM::totalWithdrawals = 0;
-
-Account::Account() {
-    this->accountNumber = 0;
-    this->balance = 0.0;
-    cout << "Account created with default values." << endl;
-}
-
 Account::Account(int accNum, double initialBalance) {
     this->accountNumber = accNum;
     this->balance = initialBalance;
-    cout << "Account created with Account Number: " << accNum << " and Initial Balance: " << initialBalance << endl;
 }
 
 double Account::getBalance() const {
@@ -28,63 +18,72 @@ void Account::setBalance(double newBalance) {
 int Account::getAccountNumber() const {
     return this->accountNumber;
 }
-ATM::ATM() {
-    this->transactionLimit = 5000.0;
-    cout << "ATM created with default transaction limit of " << transactionLimit << endl;
-}
-ATM::ATM(double limit) {
-    this->transactionLimit = limit;
-    cout << "ATM created with transaction limit of " << limit << endl;
+
+int ATM::totalDeposits = 0;
+int ATM::totalWithdrawals = 0;
+
+int ATM::getTotalDeposits() {
+    return totalDeposits;
 }
 
-double ATM::getTransactionLimit() const {
-    return transactionLimit;
+void ATM::setTotalDeposits(int deposits) {
+    totalDeposits = deposits;
 }
 
-void ATM::setTransactionLimit(double newLimit) {
-    transactionLimit = newLimit;
+int ATM::getTotalWithdrawals() {
+    return totalWithdrawals;
 }
-void ATM::deposit(Account* account, double amount) {
-    if (amount > transactionLimit) {
-        cout << "Transaction exceeds the limit of " << transactionLimit << endl;
-        return;
-    }
+
+void ATM::setTotalWithdrawals(int withdrawals) {
+    totalWithdrawals = withdrawals;
+}
+
+void ATM::deposit(Account *account, double amount) {
     double newBalance = account->getBalance() + amount;
     account->setBalance(newBalance);
-    totalDeposits++;
+    setTotalDeposits(getTotalDeposits() + 1);
     cout << "Deposit successful. New balance: " << newBalance << endl;
 }
-void ATM::withdraw(Account* account, double amount) {
+
+void ATM::withdraw(Account *account, double amount) {
     double currentBalance = account->getBalance();
-    if (amount > transactionLimit) {
-        cout << "Transaction exceeds the limit of " << transactionLimit << endl;
-        return;
-    }
     if (amount > currentBalance) {
         cout << "Insufficient funds." << endl;
     } else {
         double newBalance = currentBalance - amount;
         account->setBalance(newBalance);
-        totalWithdrawals++;
+        setTotalWithdrawals(getTotalWithdrawals() + 1);
         cout << "Withdrawal successful. Remaining balance: " << newBalance << endl;
     }
 }
-void ATM::displayBalance(const Account* account) const {
+
+void ATM::displayBalance(const Account *account) const {
     cout << "Account Number: " << account->getAccountNumber() << endl;
     cout << "Current Balance: " << account->getBalance() << endl;
 }
+
 void ATM::displayStats(int option) {
     if (option == 1) {
-        cout << "Total Deposits: " << totalDeposits << endl;
+        cout << "Total Deposits: " << getTotalDeposits() << endl;
     } else if (option == 2) {
-        cout << "Total Withdrawals: " << totalWithdrawals << endl;
+        cout << "Total Withdrawals: " << getTotalWithdrawals() << endl;
     }
 }
 
-ATM::~ATM() {
-    cout << "ATM object is being destroyed." << endl;
+SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
+    : Account(accNum, initialBalance), interestRate(rate) {}
+
+double SavingsAccount::calculateInterest() const {
+    return getBalance() * interestRate;
 }
 
-Account::~Account() {
-    cout << "Account with Account Number " << this->accountNumber << " is being destroyed." << endl;
+BankBranch::BankBranch(int accNum, double initialBalance, const std::string &name)
+    : Account(accNum, initialBalance), branchName(name) {}
+
+void BankBranch::displayBranchDetails() const {
+    cout << "Branch: " << branchName << endl;
+    cout << "Account Number: " << getAccountNumber() << endl;
+    cout << "Current Balance: " << getBalance() << endl;
+    cout << "Total Deposits: " << ATM::getTotalDeposits() << endl;
+    cout << "Total Withdrawals: " << ATM::getTotalWithdrawals() << endl;
 }
