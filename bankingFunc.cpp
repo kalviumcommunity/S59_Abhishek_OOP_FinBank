@@ -1,6 +1,4 @@
 #include "banking.h"
-#include <iostream>
-using namespace std;
 
 Account::Account(int accNum, double initialBalance) {
     this->accountNumber = accNum;
@@ -38,14 +36,14 @@ void ATM::setTotalWithdrawals(int withdrawals) {
     totalWithdrawals = withdrawals;
 }
 
-void ATM::deposit(Account *account, double amount) {
+void ATM::deposit(Account* account, double amount) {
     double newBalance = account->getBalance() + amount;
     account->setBalance(newBalance);
     setTotalDeposits(getTotalDeposits() + 1);
     cout << "Deposit successful. New balance: " << newBalance << endl;
 }
 
-void ATM::withdraw(Account *account, double amount) {
+void ATM::withdraw(Account* account, double amount) {
     double currentBalance = account->getBalance();
     if (amount > currentBalance) {
         cout << "Insufficient funds." << endl;
@@ -57,7 +55,7 @@ void ATM::withdraw(Account *account, double amount) {
     }
 }
 
-void ATM::displayBalance(const Account *account) const {
+void ATM::displayBalance(const Account* account) const {
     cout << "Account Number: " << account->getAccountNumber() << endl;
     cout << "Current Balance: " << account->getBalance() << endl;
 }
@@ -70,20 +68,25 @@ void ATM::displayStats(int option) {
     }
 }
 
-SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
+SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate) 
     : Account(accNum, initialBalance), interestRate(rate) {}
 
-double SavingsAccount::calculateInterest() const {
+SavingsAccount::SavingsAccount() 
+    : Account(0, 0.0), interestRate(0.05) {}
+
+double SavingsAccount::calculateInterest() {
     return getBalance() * interestRate;
 }
 
-BankBranch::BankBranch(int accNum, double initialBalance, const std::string &name)
+void SavingsAccount::applyInterest() {
+    double interest = calculateInterest();
+    setBalance(getBalance() + interest);
+}
+
+BankBranch::BankBranch(int accNum, double initialBalance, const string& name) 
     : Account(accNum, initialBalance), branchName(name) {}
 
 void BankBranch::displayBranchDetails() const {
     cout << "Branch: " << branchName << endl;
-    cout << "Account Number: " << getAccountNumber() << endl;
-    cout << "Current Balance: " << getBalance() << endl;
-    cout << "Total Deposits: " << ATM::getTotalDeposits() << endl;
-    cout << "Total Withdrawals: " << ATM::getTotalWithdrawals() << endl;
+    displayBalance(this);
 }
