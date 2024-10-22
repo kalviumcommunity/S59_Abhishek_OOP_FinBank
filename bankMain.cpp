@@ -12,7 +12,6 @@ int main() {
 
     double interest1 = savings1->calculateInterest();
     cout << "Calculated Interest: " << interest1 << endl;
-
     savings1->applyInterest();
     atm.displayBalance(savings1);
 
@@ -24,20 +23,19 @@ int main() {
 
     double interest2 = savings2->calculateInterest();
     cout << "Calculated Interest: " << interest2 << endl;
-
     savings2->applyInterest();
     atm.displayBalance(savings2);
 
     BankBranch *branch = new BankBranch(1003, 10000.0, "Main Branch");
 
     cout << "\n--- Bank Branch ---\n";
-    branch->displayBranchDetails();
+    branch->displayAccountInfo();
 
     atm.deposit(branch, 1500.0);
     atm.withdraw(branch, 1200.0);
 
     cout << "\nUpdated Branch Details:\n";
-    branch->displayBranchDetails();
+    branch->displayAccountInfo();
 
     int option;
     cout << "Press '1' for checking Total Deposits and '2' for Total Withdrawals: ";
