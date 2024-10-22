@@ -56,8 +56,7 @@ void ATM::withdraw(Account* account, double amount) {
 }
 
 void ATM::displayBalance(const Account* account) const {
-    cout << "Account Number: " << account->getAccountNumber() << endl;
-    cout << "Current Balance: " << account->getBalance() << endl;
+    account->displayAccountInfo();
 }
 
 void ATM::displayStats(int option) {
@@ -74,7 +73,7 @@ SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
 SavingsAccount::SavingsAccount() 
     : Account(0, 0.0), interestRate(0.05) {}
 
-double SavingsAccount::calculateInterest() {
+double SavingsAccount::calculateInterest() const {
     return getBalance() * interestRate;
 }
 
@@ -83,10 +82,19 @@ void SavingsAccount::applyInterest() {
     setBalance(getBalance() + interest);
 }
 
+void SavingsAccount::displayAccountInfo() const {
+    Account::displayAccountInfo();
+    cout << "Interest Rate: " << interestRate * 100 << "%" << endl;
+}
+
 BankBranch::BankBranch(int accNum, double initialBalance, const string& name) 
     : Account(accNum, initialBalance), branchName(name) {}
 
-void BankBranch::displayBranchDetails() const {
+double BankBranch::calculateInterest() const {
+    return 0.0;
+}
+
+void BankBranch::displayAccountInfo() const {
     cout << "Branch: " << branchName << endl;
-    displayBalance(this);
+    Account::displayAccountInfo();
 }
