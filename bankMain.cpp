@@ -1,30 +1,40 @@
-#include "banking.h"
 #include "bankingFunc.cpp"
 #include <iostream>
 using namespace std;
 
 int main() {
-    SavingsAccount *savings = new SavingsAccount(1003, 10000.0, 0.05);
+    SavingsAccount *savings = new SavingsAccount(1002, 2000.0, 0.05);
+    ATM atm;
 
-    TransactionProcessor atmProcessor;
+    cout << "--- Savings Account ---"<<endl;
+    atm.displayBalance(savings);
 
-    cout << "\n--- Savings Account ---\n";
-    atmProcessor.displayBalance(savings);
-
-    atmProcessor.deposit(savings, 500.0);
-    atmProcessor.withdraw(savings, 200.0);
+    atm.deposit(savings, 500.0);
+    atm.withdraw(savings, 200.0);
 
     double interest = savings->calculateInterest();
     cout << "Calculated Interest: " << interest << endl;
-    savings->applyInterest();
-    atmProcessor.displayBalance(savings);
+
+    atm.displayBalance(savings);
+
+    BankBranch *branch = new BankBranch(1003, 10000.0, "Main Branch");
+
+    cout << "--- Bank Branch ---"<<endl;
+    branch->displayBranchDetails();
+
+    atm.deposit(branch, 1500.0);
+    atm.withdraw(branch, 1200.0);
+
+    cout << "Updated Branch Details:"<<endl;
+    branch->displayBranchDetails();
 
     int option;
-    cout << "\nPress '1' for checking Total Deposits and '2' for Total Withdrawals: ";
-    cin >> option;
-    StatisticsTracker::displayStats(option);
+    cout << "Press '1' for checking Total Deposits and '2' for Total Withdrawals: ";
+    cin >> option; 
+    atm.displayStats(option); 
 
     delete savings;
+    delete branch;
 
     return 0;
 }
