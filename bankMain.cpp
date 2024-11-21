@@ -1,50 +1,30 @@
+#include "banking.h"
 #include "bankingFunc.cpp"
 #include <iostream>
 using namespace std;
 
 int main() {
-    SavingsAccount *savings1 = new SavingsAccount();
-    SavingsAccount *savings2 = new SavingsAccount(1002, 2000.0, 0.05);
-    ATM atm;
+    SavingsAccount *savings = new SavingsAccount(1003, 10000.0, 0.05);
 
-    cout << "\n--- Savings Account (Default) ---\n";
-    atm.displayBalance(savings1);
+    TransactionProcessor atmProcessor;
 
-    double interest1 = savings1->calculateInterest();
-    cout << "Calculated Interest: " << interest1 << endl;
-    savings1->applyInterest();
-    atm.displayBalance(savings1);
+    cout << "\n--- Savings Account ---\n";
+    atmProcessor.displayBalance(savings);
 
-    cout << "\n--- Savings Account 2 ---\n";
-    atm.displayBalance(savings2);
+    atmProcessor.deposit(savings, 500.0);
+    atmProcessor.withdraw(savings, 200.0);
 
-    atm.deposit(savings2, 500.0);
-    atm.withdraw(savings2, 200.0);
-
-    double interest2 = savings2->calculateInterest();
-    cout << "Calculated Interest: " << interest2 << endl;
-    savings2->applyInterest();
-    atm.displayBalance(savings2);
-
-    BankBranch *branch = new BankBranch(1003, 10000.0, "Main Branch");
-
-    cout << "\n--- Bank Branch ---\n";
-    branch->displayAccountInfo();
-
-    atm.deposit(branch, 1500.0);
-    atm.withdraw(branch, 1200.0);
-
-    cout << "\nUpdated Branch Details:\n";
-    branch->displayAccountInfo();
+    double interest = savings->calculateInterest();
+    cout << "Calculated Interest: " << interest << endl;
+    savings->applyInterest();
+    atmProcessor.displayBalance(savings);
 
     int option;
-    cout << "Press '1' for checking Total Deposits and '2' for Total Withdrawals: ";
+    cout << "\nPress '1' for checking Total Deposits and '2' for Total Withdrawals: ";
     cin >> option;
-    atm.displayStats(option);
+    StatisticsTracker::displayStats(option);
 
-    delete savings1;
-    delete savings2;
-    delete branch;
+    delete savings;
 
     return 0;
 }

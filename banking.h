@@ -16,26 +16,8 @@ public:
     void setBalance(double newBalance);
     int getAccountNumber() const;
     virtual double calculateInterest() const = 0;
-    virtual void displayAccountInfo() const {
-        cout << "Account Number: " << accountNumber << ", Current Balance: " << balance << endl;
-    }
+    virtual void displayAccountInfo() const;
     virtual ~Account() {}
-};
-
-class ATM {
-private:
-    static int totalDeposits;
-    static int totalWithdrawals;
-
-public:
-    static int getTotalDeposits();
-    static void setTotalDeposits(int deposits);
-    static int getTotalWithdrawals();
-    static void setTotalWithdrawals(int withdrawals);
-    void deposit(Account* account, double amount);
-    void withdraw(Account* account, double amount);
-    void displayBalance(const Account* account) const;
-    static void displayStats(int option);
 };
 
 class SavingsAccount : public Account {
@@ -50,14 +32,22 @@ public:
     void displayAccountInfo() const override;
 };
 
-class BankBranch : public Account {
+class TransactionProcessor {
+public:
+    void deposit(Account* account, double amount);
+    void withdraw(Account* account, double amount);
+    void displayBalance(const Account* account) const;
+};
+
+class StatisticsTracker {
 private:
-    string branchName;
+    static int totalDeposits;
+    static int totalWithdrawals;
 
 public:
-    BankBranch(int accNum, double initialBalance, const string& name);
-    double calculateInterest() const override;
-    void displayAccountInfo() const override;
+    static void incrementDeposits();
+    static void incrementWithdrawals();
+    static void displayStats(int option);
 };
 
 #endif
