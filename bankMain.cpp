@@ -4,25 +4,36 @@
 using namespace std;
 
 int main() {
-    SavingsAccount *savings = new SavingsAccount(1003, 10000.0, 0.05);
+    SavingsAccount* savings = new SavingsAccount(1003, 10000.0, 0.05);
 
     TransactionProcessor atmProcessor;
 
     cout << "\n--- Savings Account ---\n";
-    atmProcessor.displayBalance(savings);
+    savings->displayAccountInfo();
 
-    atmProcessor.deposit(savings, 500.0);
-    atmProcessor.withdraw(savings, 200.0);
+    DepositTransaction deposit(500.0);
+    WithdrawalTransaction withdraw(200.0);
+
+    atmProcessor.addTransaction(&deposit);
+    atmProcessor.addTransaction(&withdraw);
+
+    atmProcessor.processTransactions(savings);
 
     double interest = savings->calculateInterest();
     cout << "Calculated Interest: " << interest << endl;
     savings->applyInterest();
-    atmProcessor.displayBalance(savings);
+    savings->displayAccountInfo();
 
-    int option;
-    cout << "\nPress '1' for checking Total Deposits and '2' for Total Withdrawals: ";
-    cin >> option;
-    StatisticsTracker::displayStats(option);
+    DepositStats depositStats;
+    WithdrawalStats withdrawalStats;
+
+    depositStats.track();
+    withdrawalStats.track();
+
+    cout << "\n--- Statistics ---\n";
+    cout << "Total Deposits and Withdrawals Stats:\n";
+    depositStats.displayStats();
+    withdrawalStats.displayStats();
 
     delete savings;
 

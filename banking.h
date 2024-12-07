@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Account {
@@ -32,22 +33,65 @@ public:
     void displayAccountInfo() const override;
 };
 
-class TransactionProcessor {
+class Transaction {
 public:
-    void deposit(Account* account, double amount);
-    void withdraw(Account* account, double amount);
-    void displayBalance(const Account* account) const;
+    virtual void process(Account* account) = 0;
+    virtual ~Transaction() {}
+};
+
+class DepositTransaction : public Transaction {
+private:
+    double amount;
+
+public:
+    DepositTransaction(double amount);
+    void process(Account* account) override;
+};
+
+class WithdrawalTransaction : public Transaction {
+private:
+    double amount;
+
+public:
+    WithdrawalTransaction(double amount);
+    void process(Account* account) override;
+};
+
+class TransactionProcessor {
+private:
+    vector<Transaction*> transactions;
+
+public:
+    void addTransaction(Transaction* transaction);
+    void processTransactions(Account* account);
+    ~TransactionProcessor();
 };
 
 class StatisticsTracker {
+public:
+    virtual void track() = 0;
+    virtual void displayStats() const = 0;
+    virtual ~StatisticsTracker() {}
+};
+
+class DepositStats : public StatisticsTracker {
 private:
-    static int totalDeposits;
-    static int totalWithdrawals;
+    int totalDeposits;
 
 public:
-    static void incrementDeposits();
-    static void incrementWithdrawals();
-    static void displayStats(int option);
+    DepositStats();
+    void track() override;
+    void displayStats() const override;
+};
+
+class WithdrawalStats : public StatisticsTracker {
+private:
+    int totalWithdrawals;
+
+public:
+    WithdrawalStats();
+    void track() override;
+    void displayStats() const override;
 };
 
 #endif
