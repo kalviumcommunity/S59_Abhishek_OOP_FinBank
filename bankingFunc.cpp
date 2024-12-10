@@ -1,39 +1,44 @@
 #include "banking.h"
 
-Account::Account(int accNum, double initialBalance) {
-    this->accountNumber = accNum;
-    this->balance = initialBalance;
+Account::Account(int accNum, double initialBalance)
+    : accountNumber(accNum), balance(initialBalance) {}
+
+void Account::deposit(double amount) {
+    balance += amount;
 }
 
-double Account::getBalance() const {
-    return this->balance;
-}
-
-void Account::setBalance(double newBalance) {
-    this->balance = newBalance;
-}
-
-int Account::getAccountNumber() const {
-    return this->accountNumber;
+void Account::withdraw(double amount) {
+    if (amount > balance) {
+        cout << "Insufficient funds." << endl;
+    } else {
+        balance -= amount;
+    }
 }
 
 void Account::displayAccountInfo() const {
     cout << "Account Number: " << accountNumber << ", Current Balance: " << balance << endl;
 }
 
-SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
-    : Account(accNum, initialBalance), interestRate(rate) {}
+double Account::getBalance() const {
+    return balance;
+}
 
-SavingsAccount::SavingsAccount()
-    : Account(0, 0.0), interestRate(0.05) {}
+int Account::getAccountNumber() const {
+    return accountNumber;
+}
+
+InterestBearingAccount::InterestBearingAccount(int accNum, double initialBalance)
+    : Account(accNum, initialBalance) {}
+
+SavingsAccount::SavingsAccount(int accNum, double initialBalance, double rate)
+    : InterestBearingAccount(accNum, initialBalance), interestRate(rate) {}
 
 double SavingsAccount::calculateInterest() const {
-    return getBalance() * interestRate;
+    return balance * interestRate;
 }
 
 void SavingsAccount::applyInterest() {
-    double interest = calculateInterest();
-    setBalance(getBalance() + interest);
+    balance += calculateInterest();
 }
 
 void SavingsAccount::displayAccountInfo() const {
@@ -41,57 +46,37 @@ void SavingsAccount::displayAccountInfo() const {
     cout << "Interest Rate: " << interestRate * 100 << "%" << endl;
 }
 
-DepositTransaction::DepositTransaction(double amount) : amount(amount) {}
-
-void DepositTransaction::process(Account* account) {
-    account->setBalance(account->getBalance() + amount);
-    cout << "Deposited " << amount << ". New Balance: " << account->getBalance() << endl;
+void TransactionProcessor::deposit(Account* account, double amount) {
+    account->deposit(amount);
+    StatisticsTracker::incrementDeposits();
+    cout << "Deposit successful. New balance: " << account->getBalance() << endl;
 }
 
-WithdrawalTransaction::WithdrawalTransaction(double amount) : amount(amount) {}
-
-void WithdrawalTransaction::process(Account* account) {
-    double currentBalance = account->getBalance();
-    if (amount > currentBalance) {
-        cout << "Insufficient funds." << endl;
-    } else {
-        account->setBalance(currentBalance - amount);
-        cout << "Withdrew " << amount << ". Remaining Balance: " << account->getBalance() << endl;
-    }
+void TransactionProcessor::withdraw(Account* account, double amount) {
+    account->withdraw(amount);
+    StatisticsTracker::incrementWithdrawals();
+    cout << "Transaction complete. Remaining balance: " << account->getBalance() << endl;
 }
 
-void TransactionProcessor::addTransaction(Transaction* transaction) {
-    transactions.push_back(transaction);
+void TransactionProcessor::displayBalance(const Account* account) const {
+    account->displayAccountInfo();
 }
 
-void TransactionProcessor::processTransactions(Account* account) {
-    for (Transaction* transaction : transactions) {
-        transaction->process(account);
-    }
-}
+int StatisticsTracker::totalDeposits = 0;
+int StatisticsTracker::totalWithdrawals = 0;
 
-TransactionProcessor::~TransactionProcessor() {
-    for (Transaction* transaction : transactions) {
-        delete transaction;
-    }
-}
-
-DepositStats::DepositStats() : totalDeposits(0) {}
-
-void DepositStats::track() {
+void StatisticsTracker::incrementDeposits() {
     totalDeposits++;
 }
 
-void DepositStats::displayStats() const {
-    cout << "Total Deposits: " << totalDeposits << endl;
-}
-
-WithdrawalStats::WithdrawalStats() : totalWithdrawals(0) {}
-
-void WithdrawalStats::track() {
+void StatisticsTracker::incrementWithdrawals() {
     totalWithdrawals++;
 }
 
-void WithdrawalStats::displayStats() const {
-    cout << "Total Withdrawals: " << totalWithdrawals << endl;
+void StatisticsTracker::displayStats(int option) {
+    if (option == 1) {
+        cout << "Total Deposits: " << totalDeposits << endl;
+    } else if (option == 2) {
+        cout << "Total Withdrawals: " << totalWithdrawals << endl;
+    }
 }

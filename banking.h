@@ -3,95 +3,57 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 using namespace std;
 
 class Account {
-private:
+protected:
     int accountNumber;
     double balance;
 
 public:
     Account(int accNum, double initialBalance);
-    double getBalance() const;
-    void setBalance(double newBalance);
-    int getAccountNumber() const;
-    virtual double calculateInterest() const = 0;
-    virtual void displayAccountInfo() const;
     virtual ~Account() {}
+    virtual void deposit(double amount);
+    virtual void withdraw(double amount);
+    virtual void displayAccountInfo() const;
+    double getBalance() const;
+    int getAccountNumber() const;
 };
 
-class SavingsAccount : public Account {
+class InterestBearingAccount : public Account {
+public:
+    InterestBearingAccount(int accNum, double initialBalance);
+    virtual double calculateInterest() const = 0;
+    virtual void applyInterest() = 0;
+};
+
+class SavingsAccount : public InterestBearingAccount {
 private:
     double interestRate;
 
 public:
     SavingsAccount(int accNum, double initialBalance, double rate);
-    SavingsAccount();
     double calculateInterest() const override;
-    void applyInterest();
+    void applyInterest() override;
     void displayAccountInfo() const override;
 };
 
-class Transaction {
-public:
-    virtual void process(Account* account) = 0;
-    virtual ~Transaction() {}
-};
-
-class DepositTransaction : public Transaction {
-private:
-    double amount;
-
-public:
-    DepositTransaction(double amount);
-    void process(Account* account) override;
-};
-
-class WithdrawalTransaction : public Transaction {
-private:
-    double amount;
-
-public:
-    WithdrawalTransaction(double amount);
-    void process(Account* account) override;
-};
-
 class TransactionProcessor {
-private:
-    vector<Transaction*> transactions;
-
 public:
-    void addTransaction(Transaction* transaction);
-    void processTransactions(Account* account);
-    ~TransactionProcessor();
+    void deposit(Account* account, double amount);
+    void withdraw(Account* account, double amount);
+    void displayBalance(const Account* account) const;
 };
 
 class StatisticsTracker {
-public:
-    virtual void track() = 0;
-    virtual void displayStats() const = 0;
-    virtual ~StatisticsTracker() {}
-};
-
-class DepositStats : public StatisticsTracker {
 private:
-    int totalDeposits;
+    static int totalDeposits;
+    static int totalWithdrawals;
 
 public:
-    DepositStats();
-    void track() override;
-    void displayStats() const override;
-};
-
-class WithdrawalStats : public StatisticsTracker {
-private:
-    int totalWithdrawals;
-
-public:
-    WithdrawalStats();
-    void track() override;
-    void displayStats() const override;
+    static void incrementDeposits();
+    static void incrementWithdrawals();
+    static void displayStats(int option);
 };
 
 #endif

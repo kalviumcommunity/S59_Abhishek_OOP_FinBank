@@ -11,29 +11,23 @@ int main() {
     cout << "\n--- Savings Account ---\n";
     savings->displayAccountInfo();
 
-    DepositTransaction deposit(500.0);
-    WithdrawalTransaction withdraw(200.0);
+    atmProcessor.deposit(savings, 500.0);
+    atmProcessor.withdraw(savings, 200.0);
 
-    atmProcessor.addTransaction(&deposit);
-    atmProcessor.addTransaction(&withdraw);
-
-    atmProcessor.processTransactions(savings);
-
-    double interest = savings->calculateInterest();
-    cout << "Calculated Interest: " << interest << endl;
-    savings->applyInterest();
+    cout << "\n--- After Transactions ---\n";
     savings->displayAccountInfo();
 
-    DepositStats depositStats;
-    WithdrawalStats withdrawalStats;
+    double interest = savings->calculateInterest();
+    cout << "\nCalculated Interest: " << interest << endl;
 
-    depositStats.track();
-    withdrawalStats.track();
+    savings->applyInterest();
+
+    cout << "\n--- After Applying Interest ---\n";
+    savings->displayAccountInfo();
 
     cout << "\n--- Statistics ---\n";
-    cout << "Total Deposits and Withdrawals Stats:\n";
-    depositStats.displayStats();
-    withdrawalStats.displayStats();
+    StatisticsTracker::displayStats(1); 
+    StatisticsTracker::displayStats(2);
 
     delete savings;
 
