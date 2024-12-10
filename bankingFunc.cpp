@@ -41,44 +41,57 @@ void SavingsAccount::displayAccountInfo() const {
     cout << "Interest Rate: " << interestRate * 100 << "%" << endl;
 }
 
-void TransactionProcessor::deposit(Account* account, double amount) {
-    double newBalance = account->getBalance() + amount;
-    account->setBalance(newBalance);
-    StatisticsTracker::incrementDeposits();
-    cout << "Deposit successful. New balance: " << newBalance << endl;
+DepositTransaction::DepositTransaction(double amount) : amount(amount) {}
+
+void DepositTransaction::process(Account* account) {
+    account->setBalance(account->getBalance() + amount);
+    cout << "Deposited " << amount << ". New Balance: " << account->getBalance() << endl;
 }
 
-void TransactionProcessor::withdraw(Account* account, double amount) {
+WithdrawalTransaction::WithdrawalTransaction(double amount) : amount(amount) {}
+
+void WithdrawalTransaction::process(Account* account) {
     double currentBalance = account->getBalance();
     if (amount > currentBalance) {
         cout << "Insufficient funds." << endl;
     } else {
-        double newBalance = currentBalance - amount;
-        account->setBalance(newBalance);
-        StatisticsTracker::incrementWithdrawals();
-        cout << "Withdrawal successful. Remaining balance: " << newBalance << endl;
+        account->setBalance(currentBalance - amount);
+        cout << "Withdrew " << amount << ". Remaining Balance: " << account->getBalance() << endl;
     }
 }
 
-void TransactionProcessor::displayBalance(const Account* account) const {
-    account->displayAccountInfo();
+void TransactionProcessor::addTransaction(Transaction* transaction) {
+    transactions.push_back(transaction);
 }
 
-int StatisticsTracker::totalDeposits = 0;
-int StatisticsTracker::totalWithdrawals = 0;
+void TransactionProcessor::processTransactions(Account* account) {
+    for (Transaction* transaction : transactions) {
+        transaction->process(account);
+    }
+}
 
-void StatisticsTracker::incrementDeposits() {
+TransactionProcessor::~TransactionProcessor() {
+    for (Transaction* transaction : transactions) {
+        delete transaction;
+    }
+}
+
+DepositStats::DepositStats() : totalDeposits(0) {}
+
+void DepositStats::track() {
     totalDeposits++;
 }
 
-void StatisticsTracker::incrementWithdrawals() {
+void DepositStats::displayStats() const {
+    cout << "Total Deposits: " << totalDeposits << endl;
+}
+
+WithdrawalStats::WithdrawalStats() : totalWithdrawals(0) {}
+
+void WithdrawalStats::track() {
     totalWithdrawals++;
 }
 
-void StatisticsTracker::displayStats(int option) {
-    if (option == 1) {
-        cout << "Total Deposits: " << totalDeposits << endl;
-    } else if (option == 2) {
-        cout << "Total Withdrawals: " << totalWithdrawals << endl;
-    }
+void WithdrawalStats::displayStats() const {
+    cout << "Total Withdrawals: " << totalWithdrawals << endl;
 }
